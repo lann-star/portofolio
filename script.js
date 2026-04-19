@@ -1,27 +1,24 @@
-// 1. Smooth scroll navbar
+// Smooth scroll
 document.querySelectorAll('a[href^="#"]').forEach(link => {
   link.addEventListener('click', function(e) {
     e.preventDefault()
     const target = document.querySelector(this.getAttribute('href'))
-    target.scrollIntoView({ behavior: 'smooth' })
+    if (target) target.scrollIntoView({ behavior: 'smooth' })
   })
 })
 
-// 2. Navbar shadow saat scroll
-const nav = document.querySelector('nav')
+// Navbar shadow saat scroll
+const navEl = document.querySelector('header')
 window.addEventListener('scroll', () => {
   if (window.scrollY > 50) {
-    nav.style.boxShadow = '0 2px 12px rgba(0,0,0,0.08)'
-    nav.style.background = 'white'
+    navEl.style.boxShadow = '0 2px 12px rgba(0,0,0,0.08)'
   } else {
-    nav.style.boxShadow = 'none'
-    nav.style.background = 'transparent'
+    navEl.style.boxShadow = 'none'
   }
 })
 
-// 3. Animasi fade-in saat section masuk layar
+// Fade-in animation
 const sections = document.querySelectorAll('section')
-
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -47,7 +44,6 @@ const typingEl = document.getElementById('typing')
 
 function type() {
   const currentWord = words[wordIndex]
-
   if (isDeleting) {
     typingEl.textContent = currentWord.substring(0, charIndex - 1)
     charIndex--
@@ -55,15 +51,40 @@ function type() {
     typingEl.textContent = currentWord.substring(0, charIndex + 1)
     charIndex++
   }
-
   if (!isDeleting && charIndex === currentWord.length) {
     setTimeout(() => isDeleting = true, 1500)
   } else if (isDeleting && charIndex === 0) {
     isDeleting = false
     wordIndex = (wordIndex + 1) % words.length
   }
-
   setTimeout(type, isDeleting ? 60 : 100)
 }
 
 type()
+
+// Dark mode toggle
+const darkToggle = document.getElementById('darkToggle')
+const body = document.body
+
+if (localStorage.getItem('dark') === 'true') {
+  body.classList.add('dark')
+}
+
+darkToggle.addEventListener('click', () => {
+  body.classList.toggle('dark')
+  localStorage.setItem('dark', body.classList.contains('dark'))
+})
+
+// Burger menu
+const burger = document.getElementById('burger')
+const mobileMenu = document.getElementById('mobileMenu')
+
+burger.addEventListener('click', () => {
+  mobileMenu.classList.toggle('open')
+})
+
+mobileMenu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.remove('open')
+  })
+})
